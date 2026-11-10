@@ -19,7 +19,7 @@ function localApi(): Plugin {
         request.on('end', () => {
           void (async () => {
             try {
-              const module = (await server.ssrLoadModule('/api/compose-intent.ts')) as {
+              const module = (await server.ssrLoadModule('/src/server/compose-intent.ts')) as {
                 POST: (request: Request) => Promise<Response>;
               };
               const headers = new Headers();

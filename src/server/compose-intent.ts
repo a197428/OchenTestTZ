@@ -1,8 +1,8 @@
 import { createHash } from 'node:crypto';
-import { catalogData } from '../data/generated/catalog-data';
-import { parseCatalog, type Catalog } from '../src/core/catalog';
-import { fallbackIntent } from '../src/core/intent/fallback';
-import { parseIntent, validateIntent, type ComposeIntent } from '../src/core/intent/schema';
+import { catalogData } from '../../data/generated/catalog-data';
+import { parseCatalog, type Catalog } from '../core/catalog';
+import { fallbackIntent } from '../core/intent/fallback';
+import { parseIntent, validateIntent, type ComposeIntent } from '../core/intent/schema';
 
 const BASE_URL = (process.env.ROUTERAI_BASE_URL ?? 'https://routerai.ru/api/v1').replace(/\/$/, '');
 const MODEL = process.env.ROUTERAI_MODEL ?? 'deepseek/deepseek-v4.1-flash-1017';

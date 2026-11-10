@@ -9,3 +9,5 @@ data/generated
 playwright-report
 test-results
 examples
+
+api/compose-intent.js

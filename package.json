@@ -8,7 +8,9 @@
     "node": ">=20"
   },
   "scripts": {
-    "build": "tsc --noEmit && vite build",
+    "build": "pnpm build:api && tsc --noEmit && vite build",
+    "build:api": "tsx scripts/build-api.ts",
+    "build:api:check": "tsx scripts/build-api.ts --check",
     "demo": "tsx scripts/capture-demo.ts",
     "dev": "vite",
     "e2e": "playwright test",
@@ -24,7 +26,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "verify": "pnpm typecheck && pnpm lint && pnpm facts && pnpm lint:export && pnpm test"
+    "verify": "pnpm typecheck && pnpm lint && pnpm build:api:check && pnpm facts && pnpm lint:export && pnpm test"
   },
   "dependencies": {
     "@xmldom/xmldom": "^0.9.12",
@@ -48,6 +50,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.3.0",
+    "esbuild": "^0.28.2",
     "eslint": "^10.14.0",
     "eslint-plugin-boundaries": "^7.4.2",
     "pngjs": "^7.0.0",

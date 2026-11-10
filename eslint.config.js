@@ -9,6 +9,7 @@ export default tseslint.config(
       'node_modules/**',
       'data/**',
       'examples/**',
+      'api/compose-intent.js',
       'playwright-report/**',
       'test-results/**',
     ],
