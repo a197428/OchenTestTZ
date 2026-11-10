@@ -1,0 +1,61 @@
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 54px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+  background: #14151a;
+  flex: none;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 190px;
+}
+
+.mark {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 12px rgba(127, 215, 215, 0.35);
+}
+
+.name {
+  font-size: 13.5px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.status {
+  max-width: 340px;
+  overflow: hidden;
+  color: var(--accent);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 1120px) {
+  .brand {
+    min-width: 0;
+  }
+
+  .name {
+    display: none;
+  }
+}

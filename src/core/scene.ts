@@ -1,5 +1,6 @@
 import type { Catalog } from './catalog';
 import { objectById, variantFor } from './catalog';
+import { FORMAT_IDS } from './layout/formats';
 import type { DetailSize, FormatId, Instance, ObjectState, Scene } from './types';
 
 export function createScene(
@@ -111,6 +112,74 @@ export function setPalette(scene: Scene, paletteId: string): Scene {
 
 export function setSubstrate(scene: Scene, substrate: Scene['substrate']): Scene {
   return { ...scene, substrate };
+}
+
+export function parseScene(raw: unknown, catalog: Catalog): Scene {
+  if (!isRecord(raw)) throw new Error('Scene must be an object');
+  if (raw.version !== 1) throw new Error('Unsupported scene version');
+  if (typeof raw.format !== 'string' || !FORMAT_IDS.includes(raw.format as FormatId)) {
+    throw new Error(`Invalid scene format: ${String(raw.format)}`);
+  }
+  if (raw.size !== 'S' && raw.size !== 'L') throw new Error('Invalid scene size');
+  if (typeof raw.paletteId !== 'string') throw new Error('Invalid palette id');
+  if (!catalog.palettes.some((palette) => palette.id === raw.paletteId)) {
+    throw new Error(`Unknown palette: ${raw.paletteId}`);
+  }
+  if (raw.substrate !== 'confetti' && raw.substrate !== 'diagonal' && raw.substrate !== 'none') {
+    throw new Error('Invalid substrate');
+  }
+  if (typeof raw.scale !== 'number' || !Number.isFinite(raw.scale) || raw.scale <= 0) {
+    throw new Error('Invalid scene scale');
+  }
+  if (!Array.isArray(raw.items)) throw new Error('Scene items must be an array');
+
+  const ids = new Set<string>();
+  const items = raw.items.map((value, index): Instance => {
+    if (!isRecord(value)) throw new Error(`Item ${index} must be an object`);
+    if (typeof value.id !== 'string' || !value.id) throw new Error(`Item ${index} has no id`);
+    if (ids.has(value.id)) throw new Error(`Duplicate item id: ${value.id}`);
+    ids.add(value.id);
+    if (typeof value.objectId !== 'string') throw new Error(`Item ${value.id} has no objectId`);
+    if (value.state !== 'main' && value.state !== 'bg') {
+      throw new Error(`Item ${value.id} has invalid state`);
+    }
+    if (
+      typeof value.x !== 'number' ||
+      !Number.isFinite(value.x) ||
+      typeof value.y !== 'number' ||
+      !Number.isFinite(value.y)
+    ) {
+      throw new Error(`Item ${value.id} has invalid position`);
+    }
+    if (typeof value.rotation !== 'number' || !Number.isFinite(value.rotation)) {
+      throw new Error(`Item ${value.id} has invalid rotation`);
+    }
+    const object = objectById(catalog, value.objectId as Instance['objectId']);
+    variantFor(object, value.state, raw.size as DetailSize);
+    return {
+      id: value.id,
+      objectId: value.objectId as Instance['objectId'],
+      state: value.state,
+      x: value.x,
+      y: value.y,
+      rotation: value.rotation,
+      ...(value.locked === true ? { locked: true } : {}),
+    };
+  });
+
+  return {
+    version: 1,
+    format: raw.format as FormatId,
+    size: raw.size,
+    paletteId: raw.paletteId,
+    substrate: raw.substrate,
+    scale: raw.scale,
+    items,
+  };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
 }
 
 export function validateScene(scene: Scene, catalog: Catalog): string[] {

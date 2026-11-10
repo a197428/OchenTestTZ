@@ -1,0 +1,128 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 14px;
+  gap: 12px;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--panel-2);
+}
+
+.tab {
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  padding: 6px 8px;
+  font-size: 12px;
+  font-weight: 550;
+}
+
+.tab[aria-selected='true'] {
+  background: #24262f;
+  color: var(--text);
+}
+
+.tabBody {
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-2);
+}
+
+.inputBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.note {
+  color: var(--muted-2);
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+
+.libraryHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.libraryTitle {
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hint {
+  margin: 0;
+  color: var(--muted-2);
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-2);
+  text-align: left;
+  transition:
+    border-color 120ms ease,
+    transform 120ms ease;
+}
+
+.card:hover {
+  border-color: #3f6f6f;
+  transform: translateY(-1px);
+}
+
+.card:active {
+  transform: translateY(0);
+}
+
+.thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.35;
+  border-radius: 6px;
+  background:
+    linear-gradient(45deg, #1b1c22 25%, transparent 25%, transparent 75%, #1b1c22 75%),
+    linear-gradient(45deg, #1b1c22 25%, #17181d 25%, #17181d 75%, #1b1c22 75%);
+  background-size: 12px 12px;
+  background-position:
+    0 0,
+    6px 6px;
+  overflow: hidden;
+}
+
+.cardName {
+  overflow: hidden;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 550;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

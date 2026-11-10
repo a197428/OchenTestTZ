@@ -1,29 +1,20 @@
-import { objectById, paletteFor, variantFor, type Catalog, type FragmentMap } from '../catalog';
-import { instanceMatrix, matrixToSvg, multiply, round, scale, translate } from '../geometry';
-import { FORMATS } from '../layout/formats';
-import { recolorFragment, slotColor } from '../recolor';
-import type {
-  FragmentPath,
-  Palette,
-  Scene,
-  SubstrateElement,
-  SubstrateFormat,
-  SubstrateVariant,
-} from '../types';
+import { matrixToSvg, round } from '../geometry';
+import {
+  buildSceneRender,
+  type RenderContext,
+  type RenderPath,
+  type RenderSubstrateElement,
+} from '../render';
+import type { Scene } from '../types';
 
-export interface ExportContext {
-  catalog: Catalog;
-  fragments: FragmentMap;
-  substrates: readonly SubstrateVariant[];
-}
+export type ExportContext = RenderContext;
 
 const ID_PREFIX = 'ic1-';
 
 export function exportScene(scene: Scene, context: ExportContext): string {
-  const format = FORMATS[scene.format];
-  const palette = paletteFor(context.catalog, scene.paletteId);
-  const width = format.width;
-  const height = format.height;
+  const render = buildSceneRender(scene, context);
+  const width = render.width;
+  const height = render.height;
 
   const lines: string[] = [];
   lines.push(
@@ -38,30 +29,30 @@ export function exportScene(scene: Scene, context: ExportContext): string {
   lines.push(`  <g id="${ID_PREFIX}canvas" clip-path="url(#${ID_PREFIX}frame)">`);
   lines.push(
     `    <rect id="${ID_PREFIX}background" width="${width}" height="${height}" ` +
-      `fill="${slotColor(palette, 'bg-light')}"/>`,
+      `fill="${render.background}"/>`,
   );
 
-  if (scene.substrate !== 'none') {
-    lines.push(...substrateLines(scene, palette, context, width, height));
+  if (render.substrate) {
+    lines.push(
+      `    <g id="${ID_PREFIX}substrate" data-substrate="${render.substrate.id}" ` +
+        `transform="${matrixToSvg(render.substrate.matrix)}">`,
+    );
+    for (const element of render.substrate.elements) {
+      lines.push(`      ${substrateElement(element)}`);
+    }
+    lines.push(`    </g>`);
   }
 
   lines.push(`    <g id="${ID_PREFIX}scene">`);
-  scene.items.forEach((item, index) => {
-    const object = objectById(context.catalog, item.objectId);
-    const variant = variantFor(object, item.state, scene.size);
-    const fragments = context.fragments.get(variant.key);
-    if (!fragments) {
-      throw new Error(`Missing fragments for ${variant.key}`);
-    }
-    const matrix = instanceMatrix(scene, item, variant, scene.format);
-    const id = `${ID_PREFIX}obj-${index + 1}-${item.objectId}`;
+  render.objects.forEach((object, index) => {
+    const id = `${ID_PREFIX}obj-${index + 1}-${object.objectId}`;
     lines.push(
-      `      <g id="${id}" data-instance="${escapeAttribute(item.id)}" ` +
-        `data-object="${item.objectId}" data-state="${item.state}" ` +
-        `transform="${matrixToSvg(matrix)}">`,
+      `      <g id="${id}" data-instance="${escapeAttribute(object.instanceId)}" ` +
+        `data-object="${object.objectId}" data-state="${object.state}" ` +
+        `transform="${matrixToSvg(object.matrix)}">`,
     );
-    for (const fragment of fragments) {
-      lines.push(`        ${pathElement(fragment, palette)}`);
+    for (const path of object.paths) {
+      lines.push(`        ${pathElement(path)}`);
     }
     lines.push(`      </g>`);
   });
@@ -71,51 +62,14 @@ export function exportScene(scene: Scene, context: ExportContext): string {
   return `${lines.join('\n')}\n`;
 }
 
-function substrateLines(
-  scene: Scene,
-  palette: Palette,
-  context: ExportContext,
-  frameWidth: number,
-  frameHeight: number,
-): string[] {
-  const substrate = context.substrates.find((item) => item.id === scene.substrate);
-  if (!substrate) {
-    throw new Error(`Unknown substrate: ${scene.substrate}`);
-  }
-  const data = substrate.byFormat[scene.format];
-  const transform = substrateTransform(data, frameWidth, frameHeight);
-  const lines: string[] = [];
-  lines.push(
-    `    <g id="${ID_PREFIX}substrate" data-substrate="${substrate.id}" transform="${matrixToSvg(transform)}">`,
-  );
-  for (const element of data.elements) {
-    lines.push(`      ${substrateElement(element, palette)}`);
-  }
-  lines.push(`    </g>`);
-  return lines;
-}
-
-function substrateTransform(
-  data: SubstrateFormat,
-  frameWidth: number,
-  frameHeight: number,
-): [number, number, number, number, number, number] {
-  const origin = translate(-data.origin[0], -data.origin[1]);
-  if (!data.fallback) return origin;
-  const factor = Math.max(frameWidth / data.width, frameHeight / data.height);
-  const offsetX = (frameWidth - data.width * factor) / 2;
-  const offsetY = (frameHeight - data.height * factor) / 2;
-  return multiply(translate(offsetX, offsetY), multiply(scale(factor), origin));
-}
-
-function substrateElement(element: SubstrateElement, palette: Palette): string {
+function substrateElement(element: RenderSubstrateElement): string {
   if (element.tag === 'rect') {
     const attrs = [
       `width="${formatNumber(element.width ?? 0)}"`,
       `height="${formatNumber(element.height ?? 0)}"`,
       `x="${formatNumber(element.x ?? 0)}"`,
       `y="${formatNumber(element.y ?? 0)}"`,
-      `fill="${requireSlot(palette, element.fill)}"`,
+      `fill="${element.fill ?? 'none'}"`,
     ];
     return `<rect ${withAttrs(attrs, element.attrs)}/>`;
   }
@@ -125,24 +79,23 @@ function substrateElement(element: SubstrateElement, palette: Palette): string {
       `y1="${formatNumber(element.y1 ?? 0)}"`,
       `x2="${formatNumber(element.x2 ?? 0)}"`,
       `y2="${formatNumber(element.y2 ?? 0)}"`,
-      `stroke="${requireSlot(palette, element.stroke)}"`,
+      `stroke="${element.stroke ?? 'none'}"`,
     ];
     return `<line ${withAttrs(attrs, element.attrs)}/>`;
   }
-  const fragment: FragmentPath = {
+  const path: RenderPath = {
     d: element.d ?? '',
     ...(element.fill ? { fill: element.fill } : {}),
     ...(element.stroke ? { stroke: element.stroke } : {}),
     ...(element.attrs ? { attrs: element.attrs } : {}),
   };
-  return pathElement(fragment, palette);
+  return pathElement(path);
 }
 
-function pathElement(fragment: FragmentPath, palette: Palette): string {
-  const colors = recolorFragment(fragment, palette);
-  const attrs = [`d="${escapeAttribute(fragment.d)}"`, `fill="${colors.fill ?? 'none'}"`];
-  if (colors.stroke) attrs.push(`stroke="${colors.stroke}"`);
-  return `<path ${withAttrs(attrs, fragment.attrs)}/>`;
+function pathElement(path: RenderPath): string {
+  const attrs = [`d="${escapeAttribute(path.d)}"`, `fill="${path.fill ?? 'none'}"`];
+  if (path.stroke) attrs.push(`stroke="${path.stroke}"`);
+  return `<path ${withAttrs(attrs, path.attrs)}/>`;
 }
 
 function withAttrs(attrs: string[], extra?: Record<string, string>): string {
@@ -152,11 +105,6 @@ function withAttrs(attrs: string[], extra?: Record<string, string>): string {
     attrs.push(`${name}="${escapeAttribute(value)}"`);
   }
   return attrs.join(' ');
-}
-
-function requireSlot(palette: Palette, slot: SubstrateElement['fill']): string {
-  if (!slot) throw new Error('Substrate element is missing a color slot');
-  return slotColor(palette, slot);
 }
 
 function formatNumber(value: number): string {

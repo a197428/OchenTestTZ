@@ -46,7 +46,7 @@ export function matrixToSvg(matrix: Matrix): string {
   return `matrix(${matrix.map((value) => round(value, 6)).join(' ')})`;
 }
 
-export function instanceMatrix(
+export function instancePlacementMatrix(
   scene: Scene,
   item: Instance,
   variant: VariantGeometry,
@@ -55,10 +55,16 @@ export function instanceMatrix(
   const frame = FORMATS[format];
   const anchor = aroundPoint(frame.width / 2, frame.height / 2, scale(scene.scale));
   const rotation = aroundPoint(variant.bbox.w / 2, variant.bbox.h / 2, rotate(item.rotation));
-  return multiply(
-    anchor,
-    multiply(translate(item.x, item.y), multiply(rotation, variant.toNative)),
-  );
+  return multiply(anchor, multiply(translate(item.x, item.y), rotation));
+}
+
+export function instanceMatrix(
+  scene: Scene,
+  item: Instance,
+  variant: VariantGeometry,
+  format: FormatId,
+): Matrix {
+  return multiply(instancePlacementMatrix(scene, item, variant, format), variant.toNative);
 }
 
 export function transformPoints(
