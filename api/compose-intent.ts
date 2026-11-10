@@ -208,6 +208,27 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
 
-// Vercel Node.js runtime: the documented Web Standard export shape.
-// A bare `export default function` is treated as the legacy (req, res) handler.
-export default { fetch: handleRequest };
+// Vercel Node.js runtime: documented Web Standard named exports.
+// A bare default function is treated as the legacy (req, res) handler.
+export async function POST(request: Request): Promise<Response> {
+  try {
+    return await handleRequest(request);
+  } catch (error) {
+    console.error('[compose-intent]', error);
+    return json(
+      {
+        error: 'internal_error',
+        message: error instanceof Error ? error.message : String(error),
+      },
+      500,
+    );
+  }
+}
+
+export async function GET(): Promise<Response> {
+  return json({
+    ok: true,
+    model: MODEL,
+    keyConfigured: Boolean(process.env.ROUTERAI_API_KEY),
+  });
+}

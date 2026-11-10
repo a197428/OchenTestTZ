@@ -16,7 +16,7 @@ beforeAll(async () => {
   delete process.env.ROUTERAI_BASE_URL;
   delete process.env.ROUTERAI_MODEL;
   const module = await import('../../api/compose-intent');
-  handler = module.default.fetch;
+  handler = module.POST;
 });
 
 afterEach(() => {
