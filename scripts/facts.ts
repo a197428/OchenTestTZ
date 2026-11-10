@@ -397,12 +397,12 @@ check(
 
 const substrateFormatsOk = examples.substrates.every(
   (substrate) =>
-    substrate.formats.square.elements.length > 0 &&
-    substrate.formats.wide.elements.length > 0 &&
-    substrate.formats.tall.elements.length > 0 &&
-    !substrate.formats.square.fallback &&
-    !substrate.formats.wide.fallback &&
-    !substrate.formats.tall.fallback,
+    substrate.byFormat.square.elements.length > 0 &&
+    substrate.byFormat.wide.elements.length > 0 &&
+    substrate.byFormat.tall.elements.length > 0 &&
+    !substrate.byFormat.square.fallback &&
+    !substrate.byFormat.wide.fallback &&
+    !substrate.byFormat.tall.fallback,
 );
 check(
   'per-format substrates',
@@ -410,8 +410,8 @@ check(
   examples.substrates
     .map(
       (substrate) =>
-        `${substrate.id}: square=${substrate.formats.square.elements.length}, ` +
-        `wide=${substrate.formats.wide.elements.length}, tall=${substrate.formats.tall.elements.length}`,
+        `${substrate.id}: square=${substrate.byFormat.square.elements.length}, ` +
+        `wide=${substrate.byFormat.wide.elements.length}, tall=${substrate.byFormat.tall.elements.length}`,
     )
     .join('; '),
 );

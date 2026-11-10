@@ -48,6 +48,8 @@ export interface Template {
   format: FormatId;
   scheme: string;
   substrate: SubstrateId;
+  /** Source frame group id, kept for golden rendering. */
+  frameId: string;
   items: TemplateItem[];
 }
 
@@ -178,6 +180,7 @@ export function buildExamples(
     format: FormatId;
     scheme: string;
     substrate: SubstrateId;
+    frameId: string;
   }[] = [];
   const sceneIds = new Map<string, string>();
   const substrateData = new Map<string, { data: SubstrateFormatData; signature: string }>();
@@ -269,6 +272,7 @@ export function buildExamples(
       format,
       scheme: schemeForFill(frame.fill, curated, warnings),
       substrate,
+      frameId: frame.id,
     });
 
     for (const permutation of colorPermutations) {
@@ -288,6 +292,7 @@ export function buildExamples(
       format: meta.format,
       scheme: meta.scheme,
       substrate: meta.substrate,
+      frameId: meta.frameId,
       items: items.map((item) => ({
         objectId: item.objectId,
         state: item.state,
@@ -767,12 +772,12 @@ function mergeSubstrates(
   overrides: Map<string, { data: SubstrateFormatData; signature: string }>,
 ): GeneratedSubstrate[] {
   return base.map((substrate) => {
-    const formats = { ...substrate.formats };
-    for (const format of Object.keys(formats) as FormatId[]) {
+    const byFormat = { ...substrate.byFormat };
+    for (const format of Object.keys(byFormat) as FormatId[]) {
       const override = overrides.get(`${substrate.id}.${format}`);
-      if (override) formats[format] = override.data;
+      if (override) byFormat[format] = override.data;
     }
-    return { ...substrate, formats };
+    return { ...substrate, byFormat };
   });
 }
 

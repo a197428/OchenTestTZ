@@ -1,6 +1,6 @@
 {
   "id": "confetti",
-  "formats": {
+  "byFormat": {
     "square": {
       "width": 1000,
       "height": 1000,

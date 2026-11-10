@@ -7,6 +7,7 @@
       "format": "square",
       "scheme": "purple",
       "substrate": "diagonal",
+      "frameId": "Фон",
       "items": [
         {
           "objectId": "book",
@@ -32,6 +33,7 @@
       "format": "wide",
       "scheme": "purple",
       "substrate": "diagonal",
+      "frameId": "Фон_8",
       "items": [
         {
           "objectId": "book",
@@ -57,6 +59,7 @@
       "format": "tall",
       "scheme": "purple",
       "substrate": "diagonal",
+      "frameId": "Фон_13",
       "items": [
         {
           "objectId": "book",
@@ -82,6 +85,7 @@
       "format": "square",
       "scheme": "purple",
       "substrate": "diagonal",
+      "frameId": "Фон_2",
       "items": [
         {
           "objectId": "lamp",
@@ -115,6 +119,7 @@
       "format": "wide",
       "scheme": "purple",
       "substrate": "diagonal",
+      "frameId": "Фон_9",
       "items": [
         {
           "objectId": "lamp",
@@ -148,6 +153,7 @@
       "format": "tall",
       "scheme": "purple",
       "substrate": "diagonal",
+      "frameId": "Фон_16",
       "items": [
         {
           "objectId": "lamp",
@@ -181,6 +187,7 @@
       "format": "square",
       "scheme": "purple",
       "substrate": "diagonal",
+      "frameId": "Фон_3",
       "items": [
         {
           "objectId": "pen",
@@ -214,6 +221,7 @@
       "format": "wide",
       "scheme": "purple",
       "substrate": "diagonal",
+      "frameId": "Фон_11",
       "items": [
         {
           "objectId": "pen",
@@ -247,6 +255,7 @@
       "format": "tall",
       "scheme": "purple",
       "substrate": "diagonal",
+      "frameId": "Фон_17",
       "items": [
         {
           "objectId": "pen",
@@ -280,6 +289,7 @@
       "format": "square",
       "scheme": "purple",
       "substrate": "diagonal",
+      "frameId": "Фон_4",
       "items": [
         {
           "objectId": "folder",
@@ -313,6 +323,7 @@
       "format": "wide",
       "scheme": "purple",
       "substrate": "diagonal",
+      "frameId": "Фон_10",
       "items": [
         {
           "objectId": "folder",
@@ -346,6 +357,7 @@
       "format": "tall",
       "scheme": "purple",
       "substrate": "diagonal",
+      "frameId": "Фон_14",
       "items": [
         {
           "objectId": "folder",
@@ -379,6 +391,7 @@
       "format": "square",
       "scheme": "purple",
       "substrate": "confetti",
+      "frameId": "Фон_5",
       "items": [
         {
           "objectId": "phone",
@@ -404,6 +417,7 @@
       "format": "wide",
       "scheme": "purple",
       "substrate": "confetti",
+      "frameId": "Фон_6",
       "items": [
         {
           "objectId": "phone",
@@ -429,6 +443,7 @@
       "format": "tall",
       "scheme": "purple",
       "substrate": "confetti",
+      "frameId": "Фон_12",
       "items": [
         {
           "objectId": "phone",
@@ -454,6 +469,7 @@
       "format": "square",
       "scheme": "purple",
       "substrate": "confetti",
+      "frameId": "Фон_18",
       "items": [
         {
           "objectId": "tulips",
@@ -479,6 +495,7 @@
       "format": "wide",
       "scheme": "purple",
       "substrate": "confetti",
+      "frameId": "Фон_7",
       "items": [
         {
           "objectId": "tulips",
@@ -504,6 +521,7 @@
       "format": "tall",
       "scheme": "purple",
       "substrate": "confetti",
+      "frameId": "Фон_15",
       "items": [
         {
           "objectId": "tulips",

@@ -21,7 +21,7 @@
     "ingest": "tsx scripts/ingest/run.ts",
     "facts": "tsx scripts/facts.ts",
     "lint:export": "tsx scripts/lint-export.ts",
-    "verify": "pnpm typecheck && pnpm lint && pnpm facts && pnpm test"
+    "verify": "pnpm typecheck && pnpm lint && pnpm facts && pnpm lint:export && pnpm test"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.6.0",
@@ -40,12 +40,15 @@
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.65.0",
     "@resvg/resvg-js": "^2.6.2",
+    "@types/culori": "4.0.1",
     "@types/node": "^26.6.6",
+    "@types/pngjs": "^6.0.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.3.0",
     "eslint": "^10.14.0",
     "eslint-plugin-boundaries": "^7.4.2",
+    "pngjs": "^7.0.0",
     "prettier": "^3.9.10",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",

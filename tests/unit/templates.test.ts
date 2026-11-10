@@ -115,12 +115,12 @@ describe('generated substrates', () => {
   it('has example-derived data for every format', () => {
     for (const id of ['confetti', 'diagonal'] as const) {
       const substrate = readJson<{
-        formats: Record<string, { elements: unknown[]; fallback?: boolean }>;
+        byFormat: Record<string, { elements: unknown[]; fallback?: boolean }>;
       }>(`substrates/${id}.json`);
       for (const format of ['square', 'wide', 'tall']) {
-        expect(substrate.formats[format]).toBeDefined();
-        expect(substrate.formats[format]!.elements.length).toBeGreaterThan(0);
-        expect(substrate.formats[format]!.fallback).toBeUndefined();
+        expect(substrate.byFormat[format]).toBeDefined();
+        expect(substrate.byFormat[format]!.elements.length).toBeGreaterThan(0);
+        expect(substrate.byFormat[format]!.fallback).toBeUndefined();
       }
     }
   });

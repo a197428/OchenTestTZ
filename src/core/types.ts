@@ -77,9 +77,20 @@ export interface SubstrateElement {
   attrs?: Record<string, string>;
 }
 
+export interface SubstrateFormat {
+  /** Native size of the substrate drawing. */
+  width: number;
+  height: number;
+  /** Translation applied to elements so that the frame origin is at (0, 0). */
+  origin: [number, number];
+  elements: SubstrateElement[];
+  /** True when the drawing is cover-scaled from the 1000x1000 library version. */
+  fallback?: boolean;
+}
+
 export interface SubstrateVariant {
   id: 'confetti' | 'diagonal';
-  byFormat: Record<FormatId, { elements: SubstrateElement[] }>;
+  byFormat: Record<FormatId, SubstrateFormat>;
 }
 
 export interface Instance {

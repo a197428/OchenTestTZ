@@ -42,7 +42,7 @@ export interface SubstrateFormatData {
 
 export interface GeneratedSubstrate {
   id: SubstrateId;
-  formats: Record<FormatId, SubstrateFormatData>;
+  byFormat: Record<FormatId, SubstrateFormatData>;
 }
 
 const FORMAT_IDS: readonly FormatId[] = ['square', 'wide', 'tall'];
@@ -265,8 +265,8 @@ export function buildSubstrates(projectRoot: string, curated: CuratedData): Gene
   };
 
   return [
-    { id: 'confetti', formats: buildFormats(confetti) },
-    { id: 'diagonal', formats: buildFormats(diagonal) },
+    { id: 'confetti', byFormat: buildFormats(confetti) },
+    { id: 'diagonal', byFormat: buildFormats(diagonal) },
   ];
 }
 
