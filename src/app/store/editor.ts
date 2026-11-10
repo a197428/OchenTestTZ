@@ -36,6 +36,8 @@ interface EditorState {
   selectedId: string | null;
   viewport: Viewport;
   history: History;
+  layoutSeed: number;
+  bgMode: 'auto' | 'on' | 'off';
   select: (id: string | null) => void;
   checkpoint: () => void;
   addObject: (objectId: ObjectId, state: ObjectState, x: number, y: number) => void;
@@ -56,6 +58,9 @@ interface EditorState {
   undo: () => void;
   redo: () => void;
   setScene: (scene: Scene) => void;
+  applyLayout: (scene: Scene) => void;
+  bumpLayoutSeed: () => void;
+  setBgMode: (mode: 'auto' | 'on' | 'off') => void;
 }
 
 let idCounter = 0;
@@ -89,6 +94,8 @@ export const useEditor = create<EditorState>()(
     selectedId: null,
     viewport: { zoom: 1, panX: 0, panY: 0 },
     history: { past: [], future: [] },
+    layoutSeed: 1,
+    bgMode: 'auto',
 
     select: (id) =>
       set((state) => {
@@ -259,6 +266,23 @@ export const useEditor = create<EditorState>()(
         state.selectedId = null;
         state.history = { past: [], future: [] };
         state.viewport = { zoom: 1, panX: 0, panY: 0 };
+      }),
+
+    applyLayout: (scene) =>
+      set((state) => {
+        pushHistory(state);
+        state.scene = cloneScene(scene);
+        state.selectedId = null;
+      }),
+
+    bumpLayoutSeed: () =>
+      set((state) => {
+        state.layoutSeed += 1;
+      }),
+
+    setBgMode: (mode) =>
+      set((state) => {
+        state.bgMode = mode;
       }),
   })),
 );

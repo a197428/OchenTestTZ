@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { parseCatalog, type Catalog } from '../../src/core/catalog';
+import type { LayoutData } from '../../src/core/layout/types';
 import type { FragmentPath, SubstrateVariant } from '../../src/core/types';
 
 const projectRoot = process.cwd();
@@ -34,6 +35,14 @@ export function loadSubstrates(): SubstrateVariant[] {
     readJson<SubstrateVariant>('substrates/confetti.json'),
     readJson<SubstrateVariant>('substrates/diagonal.json'),
   ];
+}
+
+export function loadLayoutData(): LayoutData {
+  return {
+    templates: readJson<{ templates: LayoutData['templates'] }>('templates.json').templates,
+    relations: readJson<{ relations: LayoutData['relations'] }>('relations.json').relations,
+    stats: readJson<LayoutData['stats']>('stats.json'),
+  };
 }
 
 export function allowedPathData(catalog: Catalog): Set<string> {

@@ -1,7 +1,11 @@
 import catalogJson from '../../../data/generated/catalog.json';
+import relationsJson from '../../../data/generated/relations.json';
+import statsJson from '../../../data/generated/stats.json';
 import confettiJson from '../../../data/generated/substrates/confetti.json';
 import diagonalJson from '../../../data/generated/substrates/diagonal.json';
+import templatesJson from '../../../data/generated/templates.json';
 import { parseCatalog, type Catalog } from '../../core/catalog';
+import type { LayoutData } from '../../core/layout/types';
 import type { FragmentPath, SubstrateVariant } from '../../core/types';
 
 const fragmentModules = import.meta.glob<{ default: FragmentPath[] }>(
@@ -12,6 +16,7 @@ export interface Assets {
   catalog: Catalog;
   fragments: Map<string, FragmentPath[]>;
   substrates: SubstrateVariant[];
+  layout: LayoutData;
 }
 
 async function loadAssets(): Promise<Assets> {
@@ -39,6 +44,11 @@ async function loadAssets(): Promise<Assets> {
       confettiJson as unknown as SubstrateVariant,
       diagonalJson as unknown as SubstrateVariant,
     ],
+    layout: {
+      templates: (templatesJson as unknown as { templates: LayoutData['templates'] }).templates,
+      relations: (relationsJson as unknown as { relations: LayoutData['relations'] }).relations,
+      stats: statsJson as unknown as LayoutData['stats'],
+    },
   };
 }
 

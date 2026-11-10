@@ -4,6 +4,7 @@ import { lintExport } from '../../core/export/lint';
 import { exportScene } from '../../core/export/svg';
 import { FORMATS } from '../../core/layout/formats';
 import type { Assets } from '../data/assets';
+import { layoutScene } from '../editor/layoutScene';
 import { ru } from '../i18n';
 import { canRedo, canUndo, useEditor } from '../store/editor';
 import styles from './TopBar.module.css';
@@ -19,6 +20,10 @@ export function TopBar({ assets }: Props) {
   const undoAvailable = useEditor(canUndo);
   const redoAvailable = useEditor(canRedo);
   const setScene = useEditor((state) => state.setScene);
+  const applyLayout = useEditor((state) => state.applyLayout);
+  const layoutSeed = useEditor((state) => state.layoutSeed);
+  const bumpLayoutSeed = useEditor((state) => state.bumpLayoutSeed);
+  const bgMode = useEditor((state) => state.bgMode);
   const [status, setStatus] = useState<string | null>(null);
   const fileInput = useRef<HTMLInputElement | null>(null);
 
@@ -176,7 +181,21 @@ export function TopBar({ assets }: Props) {
           {status}
         </div>
       ) : null}
-      <button type="button" className="btn" disabled title={ru.editor.top.moreSoon}>
+      <button
+        type="button"
+        className="btn"
+        disabled={scene.items.length === 0}
+        title={ru.editor.top.moreSoon}
+        data-action="more"
+        onClick={() => {
+          try {
+            applyLayout(layoutScene(scene, assets, { seed: layoutSeed, bgMode }));
+            bumpLayoutSeed();
+          } catch {
+            setStatus(ru.editor.top.layoutFailed);
+          }
+        }}
+      >
         {ru.editor.top.more}
       </button>
     </header>

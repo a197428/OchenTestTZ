@@ -1,8 +1,9 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { objectById } from '../../core/catalog';
 import { FORMAT_IDS } from '../../core/layout/formats';
 import type { DetailSize, FormatId } from '../../core/types';
 import type { Assets } from '../data/assets';
+import { layoutScene } from '../editor/layoutScene';
 import { ru } from '../i18n';
 import { useEditor } from '../store/editor';
 import styles from './InspectorPanel.module.css';
@@ -26,7 +27,6 @@ const FORMAT_DIMENSION: Record<FormatId, string> = {
 export function InspectorPanel({ assets }: Props) {
   const scene = useEditor((state) => state.scene);
   const selectedId = useEditor((state) => state.selectedId);
-  const setFormat = useEditor((state) => state.setFormat);
   const setSize = useEditor((state) => state.setSize);
   const setPalette = useEditor((state) => state.setPalette);
   const setSubstrate = useEditor((state) => state.setSubstrate);
@@ -40,7 +40,10 @@ export function InspectorPanel({ assets }: Props) {
   const removeSelected = useEditor((state) => state.removeSelected);
   const setItemPosition = useEditor((state) => state.setItemPosition);
   const setRotation = useEditor((state) => state.setRotation);
-  const [bgMode, setBgMode] = useState<'auto' | 'on' | 'off'>('auto');
+  const layoutSeed = useEditor((state) => state.layoutSeed);
+  const bgMode = useEditor((state) => state.bgMode);
+  const setBgMode = useEditor((state) => state.setBgMode);
+  const applyLayout = useEditor((state) => state.applyLayout);
   const dragId = useRef<string | null>(null);
 
   const item = scene.items.find((candidate) => candidate.id === selectedId) ?? null;
@@ -50,7 +53,13 @@ export function InspectorPanel({ assets }: Props) {
   const changeFormat = (format: FormatId): void => {
     if (format === scene.format) return;
     if (scene.items.length > 0 && !window.confirm(ru.editor.confirmFormat)) return;
-    setFormat(format);
+    applyLayout(layoutScene(scene, assets, { format, seed: layoutSeed, bgMode }));
+  };
+
+  const changeBgMode = (mode: 'auto' | 'on' | 'off'): void => {
+    setBgMode(mode);
+    if (scene.items.length === 0) return;
+    applyLayout(layoutScene(scene, assets, { seed: layoutSeed, bgMode: mode }));
   };
 
   return (
@@ -157,15 +166,15 @@ export function InspectorPanel({ assets }: Props) {
 
       <section className={styles.section}>
         <h2 className="fieldLabel">{ru.editor.inspector.bgObjects}</h2>
-        <div className="seg" title={ru.editor.inspector.bgSoon}>
+        <div className="seg" title={ru.editor.inspector.bgHint}>
           {(['auto', 'on', 'off'] as const).map((mode) => (
             <button
               key={mode}
               type="button"
               className="segButton"
               aria-pressed={bgMode === mode}
-              disabled
-              onClick={() => setBgMode(mode)}
+              data-bg-mode={mode}
+              onClick={() => changeBgMode(mode)}
             >
               {ru.editor.bgMode[mode]}
             </button>

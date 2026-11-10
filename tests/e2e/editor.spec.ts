@@ -150,6 +150,26 @@ test('keeps interactive frame rate with eight objects', async ({ page }) => {
   expect(average).toBeLessThan(25);
 });
 
+test('relayouts with another variant and adds a backdrop', async ({ page }) => {
+  await page.locator('[data-object="book"]').click();
+  await page.locator('[data-object="phone"]').click();
+  const before = await page
+    .locator(objects)
+    .evaluateAll((elements) => elements.map((element) => element.getAttribute('transform')));
+  await page.locator('[data-action="more"]').click();
+  await expect(page.locator(objects)).toHaveCount(2);
+  const after = await page
+    .locator(objects)
+    .evaluateAll((elements) => elements.map((element) => element.getAttribute('transform')));
+  expect(after).not.toEqual(before);
+
+  await page.locator('[data-object="headphones"]').click();
+  await page.locator('[data-object="tulips"]').click();
+  await page.locator('[data-bg-mode="on"]').click();
+  await expect(page.locator('[data-state="bg"]')).not.toHaveCount(0);
+  await expect(page.locator('[data-state="main"]')).not.toHaveCount(0);
+});
+
 test('shows the empty state and changes scene scale', async ({ page }) => {
   await expect(page.getByText('Сцена пуста')).toBeVisible();
   await page.locator('input[type="range"]').fill('1.2');
