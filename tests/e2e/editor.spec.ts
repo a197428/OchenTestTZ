@@ -170,6 +170,37 @@ test('relayouts with another variant and adds a backdrop', async ({ page }) => {
   await expect(page.locator('[data-state="main"]')).not.toHaveCount(0);
 });
 
+test('composes from a metaphor with the local fallback', async ({ page }) => {
+  await page.getByTestId('meaning-input').fill('обучение');
+  await page.locator('[data-action="compose-meaning"]').click();
+  await expect(page.getByTestId('meaning-result')).toBeVisible();
+  await expect(page.locator(objects)).not.toHaveCount(0);
+  const fit = await page.getByTestId('meaning-result').getAttribute('data-fit');
+  expect(['good', 'approximate', 'weak']).toContain(fit);
+  await expect(page.getByText('LLM недоступен, использован локальный подбор.')).toBeVisible();
+});
+
+test('composes from comma-separated names', async ({ page }) => {
+  await page.getByRole('tab', { name: 'По названиям' }).click();
+  await page.getByTestId('names-input').fill('телефон, книга');
+  await page.getByTestId('names-input').press('Enter');
+  await expect(page.locator('[data-chip]')).toHaveCount(2);
+  await page.locator('[data-action="compose-names"]').click();
+  await expect(page.locator(objects)).toHaveCount(2);
+});
+
+test('loads a custom palette through the dialog', async ({ page }) => {
+  await page.locator('[data-action="load-palette"]').click();
+  await expect(page.getByTestId('palette-dialog')).toBeVisible();
+  await page.getByTestId('palette-input').fill('#112233 #445566 #778899 #AABBCC #DDEEFF #FFEEDD');
+  await page.locator('[data-action="parse-palette"]').click();
+  await expect(page.getByTestId('palette-dialog').locator('input[type="color"]')).toHaveCount(8);
+  await page.locator('[data-action="apply-palette"]').click();
+  await expect(page.getByTestId('palette-dialog')).toHaveCount(0);
+  const paletteId = await page.locator(canvas).getAttribute('data-scene-palette');
+  expect(paletteId).toMatch(/^custom-/);
+});
+
 test('shows the empty state and changes scene scale', async ({ page }) => {
   await expect(page.getByText('Сцена пуста')).toBeVisible();
   await page.locator('input[type="range"]').fill('1.2');

@@ -1,8 +1,9 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { objectById } from '../../core/catalog';
 import { FORMAT_IDS } from '../../core/layout/formats';
 import type { DetailSize, FormatId } from '../../core/types';
 import type { Assets } from '../data/assets';
+import { PaletteDialog } from '../dialogs/PaletteDialog';
 import { layoutScene } from '../editor/layoutScene';
 import { ru } from '../i18n';
 import { useEditor } from '../store/editor';
@@ -44,6 +45,7 @@ export function InspectorPanel({ assets }: Props) {
   const bgMode = useEditor((state) => state.bgMode);
   const setBgMode = useEditor((state) => state.setBgMode);
   const applyLayout = useEditor((state) => state.applyLayout);
+  const [paletteOpen, setPaletteOpen] = useState(false);
   const dragId = useRef<string | null>(null);
 
   const item = scene.items.find((candidate) => candidate.id === selectedId) ?? null;
@@ -126,6 +128,14 @@ export function InspectorPanel({ assets }: Props) {
             </button>
           ))}
         </div>
+        <button
+          type="button"
+          className="btn"
+          data-action="load-palette"
+          onClick={() => setPaletteOpen(true)}
+        >
+          {ru.editor.paletteDialog.load}
+        </button>
       </section>
 
       <section className={styles.section}>
@@ -359,6 +369,17 @@ export function InspectorPanel({ assets }: Props) {
           <p className={styles.empty}>{ru.editor.inspector.empty}</p>
         )}
       </section>
+
+      {paletteOpen ? (
+        <PaletteDialog
+          assets={assets}
+          onClose={() => setPaletteOpen(false)}
+          onApplied={(paletteId) => {
+            setPalette(paletteId);
+            setPaletteOpen(false);
+          }}
+        />
+      ) : null}
     </div>
   );
 }

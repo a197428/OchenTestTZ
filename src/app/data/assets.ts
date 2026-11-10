@@ -7,6 +7,7 @@ import templatesJson from '../../../data/generated/templates.json';
 import { parseCatalog, type Catalog } from '../../core/catalog';
 import type { LayoutData } from '../../core/layout/types';
 import type { FragmentPath, SubstrateVariant } from '../../core/types';
+import { loadCustomPalettes } from './customPalettes';
 
 const fragmentModules = import.meta.glob<{ default: FragmentPath[] }>(
   '../../../data/generated/fragments/*.json',
@@ -21,6 +22,11 @@ export interface Assets {
 
 async function loadAssets(): Promise<Assets> {
   const catalog = parseCatalog(catalogJson as unknown);
+  for (const palette of loadCustomPalettes()) {
+    if (!catalog.palettes.some((item) => item.id === palette.id)) {
+      catalog.palettes.push(palette);
+    }
+  }
   const fragments = new Map<string, FragmentPath[]>();
 
   await Promise.all(
