@@ -90,7 +90,7 @@ export function LibraryPanel({ assets }: Props) {
     setMeaningError(null);
     setMeaningResult(null);
     let intent: ComposeIntent;
-    let usedFallback = false;
+    let usedFallback: boolean;
     try {
       const response = await fetch('/api/compose-intent', {
         method: 'POST',
@@ -98,6 +98,7 @@ export function LibraryPanel({ assets }: Props) {
         body: JSON.stringify({ text, locale: 'ru' }),
       });
       if (!response.ok) throw new Error('compose-intent failed');
+      usedFallback = response.headers.get('x-intent-source') === 'fallback';
       const parsed = parseIntent(await response.json());
       const validation = validateIntent(parsed, assets.catalog);
       if (!validation.ok) throw new Error(validation.errors.join('; '));

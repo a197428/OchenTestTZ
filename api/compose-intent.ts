@@ -1,14 +1,17 @@
 import { createHash } from 'node:crypto';
-import Anthropic from '@anthropic-ai/sdk';
 import catalogJson from '../data/generated/catalog.json';
 import { parseCatalog, type Catalog } from '../src/core/catalog';
 import { fallbackIntent } from '../src/core/intent/fallback';
 import { parseIntent, validateIntent, type ComposeIntent } from '../src/core/intent/schema';
 
 const catalog: Catalog = parseCatalog(catalogJson as unknown);
-const MODEL = process.env.ANTHROPIC_MODEL ?? 'claude-haiku-5-5';
+const BASE_URL = (process.env.ROUTERAI_BASE_URL ?? 'https://routerai.ru/api/v1').replace(/\/$/, '');
+const MODEL = process.env.ROUTERAI_MODEL ?? 'deepseek/deepseek-v4.1-flash-1017';
 const RATE_LIMIT = Number(process.env.COMPOSE_RATE_LIMIT_PER_HOUR ?? 20);
 const MAX_TEXT = 200;
+const REQUEST_TIMEOUT_MS = 25_000;
+
+type IntentSource = 'llm' | 'fallback';
 
 const rateBuckets = new Map<string, number[]>();
 const cache = new Map<string, { expires: number; intent: ComposeIntent }>();
@@ -68,50 +71,66 @@ export default async function handler(request: Request): Promise<Response> {
   const key = createHash('sha256').update(`${locale}:${text}`).digest('hex');
   const cached = cache.get(key);
   if (cached && cached.expires > Date.now()) {
-    return json(cached.intent, 200);
+    return json(cached.intent, 200, 'llm');
   }
 
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return json(fallbackIntent(text, catalog), 200);
+  if (!process.env.ROUTERAI_API_KEY) {
+    return json(fallbackIntent(text, catalog), 200, 'fallback');
   }
 
   try {
-    const intent = await composeWithClaude(text, locale);
+    const intent = await composeWithRouterAi(text, locale);
     cache.set(key, { expires: Date.now() + 60 * 60 * 1000, intent });
-    return json(intent, 200);
+    return json(intent, 200, 'llm');
   } catch {
-    return json(fallbackIntent(text, catalog), 200);
+    return json(fallbackIntent(text, catalog), 200, 'fallback');
   }
 }
 
-async function composeWithClaude(text: string, locale: 'ru' | 'en'): Promise<ComposeIntent> {
-  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+async function composeWithRouterAi(text: string, locale: 'ru' | 'en'): Promise<ComposeIntent> {
   let lastErrors: string[] = [];
 
   for (let attempt = 0; attempt < 2; attempt++) {
-    const response = await client.messages.create({
-      model: MODEL,
-      max_tokens: 1000,
-      system: `${SYSTEM_PROMPT}\nRespond in ${locale === 'ru' ? 'Russian' : 'English'} for "note".`,
-      messages: [
-        {
-          role: 'user',
-          content:
-            attempt === 0
-              ? `Metaphor: ${text}`
-              : `Metaphor: ${text}\nThe previous answer was invalid: ${lastErrors.join('; ')}. Return only valid JSON.`,
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+    let response: Response;
+    try {
+      response = await fetch(`${BASE_URL}/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          authorization: `Bearer ${process.env.ROUTERAI_API_KEY}`,
         },
-      ],
-    });
-
-    if (response.stop_reason === 'refusal') {
-      throw new Error('Model refused the request');
+        body: JSON.stringify({
+          model: MODEL,
+          max_tokens: 1000,
+          temperature: 0.2,
+          messages: [
+            {
+              role: 'system',
+              content: `${SYSTEM_PROMPT}\nRespond in ${locale === 'ru' ? 'Russian' : 'English'} for "note".`,
+            },
+            {
+              role: 'user',
+              content:
+                attempt === 0
+                  ? `Metaphor: ${text}`
+                  : `Metaphor: ${text}\nThe previous answer was invalid: ${lastErrors.join('; ')}. Return only valid JSON.`,
+            },
+          ],
+        }),
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeout);
     }
 
-    const raw = response.content
-      .filter((block) => block.type === 'text')
-      .map((block) => block.text)
-      .join('\n');
+    if (!response.ok) {
+      throw new Error(`RouterAI HTTP ${response.status}`);
+    }
+
+    const payload = (await response.json()) as unknown;
+    const raw = extractContent(payload);
     try {
       const parsed = parseIntent(extractJson(raw));
       const validation = validateIntent(parsed, catalog);
@@ -126,6 +145,22 @@ async function composeWithClaude(text: string, locale: 'ru' | 'en'): Promise<Com
   }
 
   throw new Error(`Invalid model response: ${lastErrors.join('; ')}`);
+}
+
+function extractContent(payload: unknown): string {
+  if (!isRecord(payload)) return '';
+  const choices = payload.choices;
+  if (!Array.isArray(choices) || choices.length === 0) return '';
+  const choice = choices[0];
+  if (!isRecord(choice) || !isRecord(choice.message)) return '';
+  const content = choice.message.content;
+  if (typeof content === 'string') return content;
+  if (Array.isArray(content)) {
+    return content
+      .map((part) => (isRecord(part) && typeof part.text === 'string' ? part.text : ''))
+      .join('\n');
+  }
+  return '';
 }
 
 function extractJson(raw: string): unknown {
@@ -160,14 +195,13 @@ function isRateLimited(ip: string): boolean {
   return false;
 }
 
-function json(value: unknown, status = 200): Response {
-  return new Response(JSON.stringify(value), {
-    status,
-    headers: {
-      'content-type': 'application/json; charset=utf-8',
-      'cache-control': 'no-store',
-    },
-  });
+function json(value: unknown, status = 200, source?: IntentSource): Response {
+  const headers: Record<string, string> = {
+    'content-type': 'application/json; charset=utf-8',
+    'cache-control': 'no-store',
+  };
+  if (source) headers['x-intent-source'] = source;
+  return new Response(JSON.stringify(value), { status, headers });
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

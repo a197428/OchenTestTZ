@@ -264,9 +264,9 @@
   `backdrop → bg`.
 - `src/core/intent/fallback.ts`: локальный подбор по тегам, честный `fit`,
   добор объектов при слабом совпадении.
-- `api/compose-intent.ts`: Claude API (`ANTHROPIC_MODEL`, по умолчанию
-  `claude-haiku-5-5`), ключ только на сервере, лимит 20/час на IP, кэш по хэшу,
-  повтор при невалидном ответе, fallback при ошибке/лимите/отсутствии ключа.
+- `api/compose-intent.ts`: LLM (изначально Claude API), ключ только на сервере,
+  лимит 20/час на IP, кэш по хэшу, повтор при невалидном ответе, fallback при
+  ошибке/лимите/отсутствии ключа. Позже провайдер переключён на RouterAI (D-036).
 - UI сценария 1: ввод метафоры, загрузка, `fit` и note, использован ли fallback,
   список объектов и концептов; результат сразу уходит в `layout()`.
 - UI сценария 2: подсказки, чипсы, разбор через запятую, сообщение «нет в
@@ -331,3 +331,16 @@
 - [ ] Проверить цвета: фон/объекты соответствуют purple-схеме.
 - [ ] Убедиться, что нет растра, `<image>`, стилей и неразборчивых имён.
 - [ ] Повторить для `02-finance-wide.svg` (orange) и `03-focus-tall.svg` (teal).
+
+## После финиша: смена LLM-провайдера (2026-11-10)
+
+- `api/compose-intent.ts` переведён с Anthropic SDK на RouterAI:
+  `https://routerai.ru/api/v1/chat/completions`, `Authorization: Bearer`,
+  модель `deepseek/deepseek-v4.1-flash-1017` (OpenAI-совместимый формат).
+- Переменные: `ROUTERAI_API_KEY`, `ROUTERAI_BASE_URL`, `ROUTERAI_MODEL`.
+- `@anthropic-ai/sdk` удалён из зависимостей.
+- `vite.config.ts` получил dev-middleware `/api/compose-intent`, чтобы ключ работал
+  и в `pnpm dev`, а не только на Vercel.
+- Ответ API помечает источник заголовком `x-intent-source: llm|fallback`.
+- Тесты API обновлены: без ключа — fallback, с моком RouterAI — валидный ответ,
+  повтор и fallback при ошибке.

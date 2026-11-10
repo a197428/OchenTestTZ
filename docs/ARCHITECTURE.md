@@ -155,10 +155,13 @@ Golden-метрика: 18/18 эталонных сцен, средняя оши�
 
 - `POST { text, locale }`, длина ≤200;
 - лимит 20/час на IP (in-memory), кэш по SHA-256;
-- Claude API с каталогом в системном промпте; текст — данные, не инструкции;
+- RouterAI, OpenAI-совместимый `POST /chat/completions` с `Bearer`-ключом;
+  модель `deepseek/deepseek-v4.1-flash-1017` (переопределяется `ROUTERAI_MODEL`);
+- каталог в системном промпте; текст — данные, не инструкции;
 - ответ валидируется zod-схемой и правилами (objectId ∈ каталога, 1–6 уникальных,
   ровно один hero, backdrop только bg); при ошибке один повтор;
-- при ошибке/лимите/отсутствии ключа — локальный `fallbackIntent`.
+- заголовок `x-intent-source: llm|fallback`; при ошибке/лимите/отсутствии ключа —
+  локальный `fallbackIntent`.
 
 Результат сразу уходит в `layout()`. UI показывает `fit`, `note` и пометку локального
 подбора.
@@ -185,7 +188,9 @@ Golden-метрика: 18/18 эталонных сцен, средняя оши�
 ## 12. Деплой
 
 Vercel: статический `dist` + `api/compose-intent.ts` (Node). Переменные:
-`ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL`, `COMPOSE_RATE_LIMIT_PER_HOUR`.
+`ROUTERAI_API_KEY`, `ROUTERAI_BASE_URL`, `ROUTERAI_MODEL`,
+`COMPOSE_RATE_LIMIT_PER_HOUR`. Vite dev-сервер сам обслуживает `/api/compose-intent`,
+поэтому ключ работает и в `pnpm dev`.
 Rate limit и кэш живут в памяти инстанса; при масштабировании нужен внешний стор,
 но для тестового задания этого достаточно.
 

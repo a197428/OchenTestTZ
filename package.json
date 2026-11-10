@@ -27,7 +27,6 @@
     "verify": "pnpm typecheck && pnpm lint && pnpm facts && pnpm lint:export && pnpm test"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^1.6.0",
     "@xmldom/xmldom": "^0.9.12",
     "culori": "^4.0.2",
     "fuse.js": "^7.5.0",
