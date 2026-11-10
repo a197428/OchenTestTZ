@@ -5,7 +5,8 @@
 Illustration Composer — Vite/React/TypeScript SPA + одна serverless-функция.
 Вся предметная логика (источники, геометрия, палитры, раскладка, экспорт) живёт в
 `src/core` и не зависит от React/DOM. UI в `src/app` — тонкий слой над `Scene`.
-`api/compose-intent.ts` — единственное место, где вызывается LLM.
+`src/server/compose-intent.ts` — единственное место, где вызывается LLM; для Vercel он
+собирается esbuild в self-contained `api/compose-intent.js` (см. §9).
 
 ```
 Figma SVG ─ingest(1 раз)→ catalog + fragments + substrates + templates + relations
@@ -151,7 +152,7 @@ Golden-метрика: 18/18 эталонных сцен, средняя оши�
 
 ### По смыслу
 
-`api/compose-intent.ts`:
+`src/server/compose-intent.ts` (→ `api/compose-intent.js`):
 
 - `POST { text, locale }`, длина ≤200;
 - лимит 20/час на IP (in-memory), кэш по SHA-256;
@@ -187,7 +188,10 @@ Golden-метрика: 18/18 эталонных сцен, средняя оши�
 
 ## 12. Деплой
 
-Vercel: статический `dist` + `api/compose-intent.ts` (Node). Переменные:
+Vercel: статический `dist` + `api/compose-intent.js` (Node). Исходник функции —
+`src/server/compose-intent.ts`; `pnpm build:api` собирает его esbuild-ом в один файл
+(каталог, zod и fuse встроены), потому что Vercel не бандлит локальные модули вне
+`api/`. `pnpm verify` проверяет свежесть бандла. Переменные:
 `ROUTERAI_API_KEY`, `ROUTERAI_BASE_URL`, `ROUTERAI_MODEL`,
 `COMPOSE_RATE_LIMIT_PER_HOUR`. Vite dev-сервер сам обслуживает `/api/compose-intent`,
 поэтому ключ работает и в `pnpm dev`.

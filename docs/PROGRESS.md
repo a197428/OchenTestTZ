@@ -344,3 +344,28 @@
 - Ответ API помечает источник заголовком `x-intent-source: llm|fallback`.
 - Тесты API обновлены: без ключа — fallback, с моком RouterAI — валидный ответ,
   повтор и fallback при ошибке.
+
+## Деплой на Vercel и живая проверка (2026-11-10)
+
+Итог: **https://ochentestz.vercel.app/**.
+
+Что пришлось исправить после первого деплоя:
+
+- Vercel трактовал `export default function` как legacy `(req, res)`-обработчик;
+  перешли на именованные Web-экспорты `POST`/`GET`.
+- Vercel не бандлит модули вне `api/`: относительные импорты в `src/core` и
+  `data/generated` падали с `FUNCTION_INVOCATION_FAILED`. Функция теперь собирается
+  `pnpm build:api` (esbuild) в self-contained `api/compose-intent.js`.
+- Значения env на Vercel могут содержать хвостовые переводы строк; `BASE_URL`,
+  `MODEL` и ключ теперь обрезаются через `.trim()`.
+
+Живая проверка (Playwright + curl):
+
+- `/api/health` — 200, runtime node.
+- `/api/compose-intent` GET — каталог 10 объектов, модель
+  `deepseek/deepseek-v4.1-flash-1017`, ключ настроен.
+- POST «обучение» — 200, `x-intent-source: llm`, `fit: good`, 6 объектов без fallback.
+- UI: 10 карточек, сценарий 1, сценарий 2 (2 чипса → 2 объекта), диалог палитры
+  (8 слотов), скачивание SVG (94 КБ, без растра/style), 0 ошибок в консоли.
+
+Единственное, что осталось вручную: проверка примеров в Figma.

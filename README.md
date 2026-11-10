@@ -95,7 +95,7 @@ stroke, attrs }`. Alias (фон S = фон L, лампа/тюльпаны S = L)
 
 ### Вход по смыслу и LLM
 
-`api/compose-intent.ts` вызывает RouterAI (`ROUTERAI_BASE_URL`,
+`src/server/compose-intent.ts` (собирается в self-contained `api/compose-intent.js`) вызывает RouterAI (`ROUTERAI_BASE_URL`,
 `ROUTERAI_MODEL=deepseek/deepseek-v4.1-flash-1017`) — OpenAI-совместимый
 `POST /chat/completions` с `Authorization: Bearer`. Каталог передаётся в системном
 промпте, ответ валидируется `zod`-схемой и правилами каталога. Ключ только на сервере,
@@ -104,19 +104,20 @@ fallback. Подробнее — [`docs/AI_TOOLS.md`](docs/AI_TOOLS.md).
 
 ## Команды
 
-| Команда                | Назначение                                                |
-| ---------------------- | --------------------------------------------------------- |
-| `pnpm dev`             | Vite dev-сервер                                           |
-| `pnpm build`           | Проверка типов и production-сборка                        |
-| `pnpm ingest`          | Пересобрать каталог/фрагменты/подложки/шаблоны            |
-| `pnpm facts`           | 18 проверок фактов о библиотеке и свежести generated      |
-| `pnpm lint:export`     | Линт всех 18 экспортов примеров                           |
-| `pnpm test`            | Unit + golden-тесты (Vitest)                              |
-| `pnpm e2e`             | Playwright: 11 сценариев редактора и входов               |
-| `pnpm verify`          | `typecheck + lint + facts + lint:export + test`           |
-| `pnpm examples`        | Пересобрать 3 примера в `examples/`                       |
-| `pnpm preview:layouts` | Контактные листы 10 наборов × 3 формата                   |
-| `pnpm demo`            | Скриншоты и `docs/demo.gif` (нужен запущенный `pnpm dev`) |
+| Команда                | Назначение                                                     |
+| ---------------------- | -------------------------------------------------------------- |
+| `pnpm dev`             | Vite dev-сервер                                                |
+| `pnpm build`           | Сборка API-бандла, проверка типов и production-сборка          |
+| `pnpm build:api`       | Пересобрать `api/compose-intent.js` из `src/server`            |
+| `pnpm ingest`          | Пересобрать каталог/фрагменты/подложки/шаблоны                 |
+| `pnpm facts`           | 18 проверок фактов о библиотеке и свежести generated           |
+| `pnpm lint:export`     | Линт всех 18 экспортов примеров                                |
+| `pnpm test`            | Unit + golden-тесты (Vitest)                                   |
+| `pnpm e2e`             | Playwright: 11 сценариев редактора и входов                    |
+| `pnpm verify`          | `typecheck + lint + bundle check + facts + lint:export + test` |
+| `pnpm examples`        | Пересобрать 3 примера в `examples/`                            |
+| `pnpm preview:layouts` | Контактные листы 10 наборов × 3 формата                        |
+| `pnpm demo`            | Скриншоты и `docs/demo.gif` (нужен запущенный `pnpm dev`)      |
 
 ## Тестирование
 
@@ -152,7 +153,8 @@ fallback. Подробнее — [`docs/AI_TOOLS.md`](docs/AI_TOOLS.md).
 ## Деплой
 
 Проект готов для Vercel: статический Vite-фронтенд + serverless-функция
-`api/compose-intent.ts`.
+`api/compose-intent.js` (self-contained бандл из `src/server/compose-intent.ts`;
+Vercel не умеет бандлить локальные модули вне `api/`).
 
 ```bash
 cp .env.example .env
@@ -194,13 +196,14 @@ vercel --prod
 ## Структура
 
 ```
-api/                 serverless-функция compose-intent
+api/                 compose-intent.js (собранный) + health
 data/source/         исходники (read-only)
 data/curated/        явная карта Figma, палитры, семантика объектов
 data/generated/      catalog, fragments, substrates, templates, relations, stats
 scripts/             ingest, facts, lint-export, examples, previews, demo
 src/core/            чистая логика: слоты, палитры, сцена, геометрия, render, export,
                      раскладка, intent — без DOM/React
+src/server/          исходник compose-intent для Vercel
 src/app/             React UI: store, canvas, panels, dialogs, i18n
 tests/               unit, golden, e2e
 examples/            3 готовые композиции (SVG + PNG)
