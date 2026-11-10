@@ -4,8 +4,10 @@ import { parseCatalog, type Catalog } from '../core/catalog';
 import { fallbackIntent } from '../core/intent/fallback';
 import { parseIntent, validateIntent, type ComposeIntent } from '../core/intent/schema';
 
-const BASE_URL = (process.env.ROUTERAI_BASE_URL ?? 'https://routerai.ru/api/v1').replace(/\/$/, '');
-const MODEL = process.env.ROUTERAI_MODEL ?? 'deepseek/deepseek-v4.1-flash-1017';
+const BASE_URL = (process.env.ROUTERAI_BASE_URL ?? 'https://routerai.ru/api/v1')
+  .trim()
+  .replace(/\/$/, '');
+const MODEL = (process.env.ROUTERAI_MODEL ?? 'deepseek/deepseek-v4.1-flash-1017').trim();
 const RATE_LIMIT = Number(process.env.COMPOSE_RATE_LIMIT_PER_HOUR ?? 20);
 const MAX_TEXT = 200;
 const REQUEST_TIMEOUT_MS = 25_000;
@@ -16,6 +18,11 @@ const rateBuckets = new Map<string, number[]>();
 const cache = new Map<string, { expires: number; intent: ComposeIntent }>();
 let catalog: Catalog | null = null;
 let catalogError: string | null = null;
+
+function apiKey(): string | undefined {
+  const value = process.env.ROUTERAI_API_KEY?.trim();
+  return value ? value : undefined;
+}
 
 function getCatalog(): Catalog {
   if (catalog) return catalog;
@@ -95,19 +102,20 @@ async function handleRequest(request: Request): Promise<Response> {
     );
   }
 
-  const key = createHash('sha256').update(`${locale}:${text}`).digest('hex');
-  const cached = cache.get(key);
+  const cacheKey = createHash('sha256').update(`${locale}:${text}`).digest('hex');
+  const cached = cache.get(cacheKey);
   if (cached && cached.expires > Date.now()) {
     return json(cached.intent, 200, 'llm');
   }
 
-  if (!process.env.ROUTERAI_API_KEY) {
+  const key = apiKey();
+  if (!key) {
     return json(fallbackIntent(text, data), 200, 'fallback');
   }
 
   try {
-    const intent = await composeWithRouterAi(text, locale, data);
-    cache.set(key, { expires: Date.now() + 60 * 60 * 1000, intent });
+    const intent = await composeWithRouterAi(text, locale, data, key);
+    cache.set(cacheKey, { expires: Date.now() + 60 * 60 * 1000, intent });
     return json(intent, 200, 'llm');
   } catch {
     return json(fallbackIntent(text, data), 200, 'fallback');
@@ -118,6 +126,7 @@ async function composeWithRouterAi(
   text: string,
   locale: 'ru' | 'en',
   data: Catalog,
+  apiKeyValue: string,
 ): Promise<ComposeIntent> {
   let lastErrors: string[] = [];
 
@@ -130,7 +139,7 @@ async function composeWithRouterAi(
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          authorization: `Bearer ${process.env.ROUTERAI_API_KEY}`,
+          authorization: `Bearer ${apiKeyValue}`,
         },
         body: JSON.stringify({
           model: MODEL,
@@ -262,7 +271,7 @@ export async function GET(): Promise<Response> {
     return json({
       ok: true,
       model: MODEL,
-      keyConfigured: Boolean(process.env.ROUTERAI_API_KEY),
+      keyConfigured: Boolean(apiKey()),
       catalogLoaded: true,
       objects: data.objects.length,
     });
@@ -270,7 +279,7 @@ export async function GET(): Promise<Response> {
     return json({
       ok: false,
       model: MODEL,
-      keyConfigured: Boolean(process.env.ROUTERAI_API_KEY),
+      keyConfigured: Boolean(apiKey()),
       catalogLoaded: false,
       catalogError: error instanceof Error ? error.message : String(error),
       cachedError: catalogError,

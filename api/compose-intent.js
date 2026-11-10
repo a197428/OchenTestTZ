@@ -25823,8 +25823,8 @@ function parseIntent(raw) {
 }
 
 // src/server/compose-intent.ts
-var BASE_URL = (process.env.ROUTERAI_BASE_URL ?? "https://routerai.ru/api/v1").replace(/\/$/, "");
-var MODEL = process.env.ROUTERAI_MODEL ?? "deepseek/deepseek-v4.1-flash-1017";
+var BASE_URL = (process.env.ROUTERAI_BASE_URL ?? "https://routerai.ru/api/v1").trim().replace(/\/$/, "");
+var MODEL = (process.env.ROUTERAI_MODEL ?? "deepseek/deepseek-v4.1-flash-1017").trim();
 var RATE_LIMIT = Number(process.env.COMPOSE_RATE_LIMIT_PER_HOUR ?? 20);
 var MAX_TEXT = 200;
 var REQUEST_TIMEOUT_MS = 25e3;
@@ -25832,6 +25832,10 @@ var rateBuckets = /* @__PURE__ */ new Map();
 var cache = /* @__PURE__ */ new Map();
 var catalog = null;
 var catalogError = null;
+function apiKey() {
+  const value = process.env.ROUTERAI_API_KEY?.trim();
+  return value ? value : void 0;
+}
 function getCatalog() {
   if (catalog) return catalog;
   try {
@@ -25900,23 +25904,24 @@ async function handleRequest(request) {
       500
     );
   }
-  const key = createHash("sha256").update(`${locale}:${text}`).digest("hex");
-  const cached2 = cache.get(key);
+  const cacheKey = createHash("sha256").update(`${locale}:${text}`).digest("hex");
+  const cached2 = cache.get(cacheKey);
   if (cached2 && cached2.expires > Date.now()) {
     return json2(cached2.intent, 200, "llm");
   }
-  if (!process.env.ROUTERAI_API_KEY) {
+  const key = apiKey();
+  if (!key) {
     return json2(fallbackIntent(text, data), 200, "fallback");
   }
   try {
-    const intent = await composeWithRouterAi(text, locale, data);
-    cache.set(key, { expires: Date.now() + 60 * 60 * 1e3, intent });
+    const intent = await composeWithRouterAi(text, locale, data, key);
+    cache.set(cacheKey, { expires: Date.now() + 60 * 60 * 1e3, intent });
     return json2(intent, 200, "llm");
   } catch {
     return json2(fallbackIntent(text, data), 200, "fallback");
   }
 }
-async function composeWithRouterAi(text, locale, data) {
+async function composeWithRouterAi(text, locale, data, apiKeyValue) {
   let lastErrors = [];
   for (let attempt = 0; attempt < 2; attempt++) {
     const controller = new AbortController();
@@ -25927,7 +25932,7 @@ async function composeWithRouterAi(text, locale, data) {
         method: "POST",
         headers: {
           "content-type": "application/json",
-          authorization: `Bearer ${process.env.ROUTERAI_API_KEY}`
+          authorization: `Bearer ${apiKeyValue}`
         },
         body: JSON.stringify({
           model: MODEL,
@@ -26039,7 +26044,7 @@ async function GET() {
     return json2({
       ok: true,
       model: MODEL,
-      keyConfigured: Boolean(process.env.ROUTERAI_API_KEY),
+      keyConfigured: Boolean(apiKey()),
       catalogLoaded: true,
       objects: data.objects.length
     });
@@ -26047,7 +26052,7 @@ async function GET() {
     return json2({
       ok: false,
       model: MODEL,
-      keyConfigured: Boolean(process.env.ROUTERAI_API_KEY),
+      keyConfigured: Boolean(apiKey()),
       catalogLoaded: false,
       catalogError: error62 instanceof Error ? error62.message : String(error62),
       cachedError: catalogError
