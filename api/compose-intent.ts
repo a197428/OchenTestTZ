@@ -45,7 +45,7 @@ Schema:
   "note": string
 }`;
 
-export default async function handler(request: Request): Promise<Response> {
+async function handleRequest(request: Request): Promise<Response> {
   if (request.method !== 'POST') {
     return json({ error: 'method_not_allowed' }, 405);
   }
@@ -207,3 +207,7 @@ function json(value: unknown, status = 200, source?: IntentSource): Response {
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
+
+// Vercel Node.js runtime: the documented Web Standard export shape.
+// A bare `export default function` is treated as the legacy (req, res) handler.
+export default { fetch: handleRequest };

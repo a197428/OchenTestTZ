@@ -20,7 +20,7 @@ function localApi(): Plugin {
           void (async () => {
             try {
               const module = (await server.ssrLoadModule('/api/compose-intent.ts')) as {
-                default: (request: Request) => Promise<Response>;
+                default: { fetch: (request: Request) => Promise<Response> };
               };
               const headers = new Headers();
               for (const [name, value] of Object.entries(request.headers)) {
@@ -35,7 +35,7 @@ function localApi(): Plugin {
                   body: Buffer.concat(chunks).toString('utf8'),
                 },
               );
-              const apiResponse = await module.default(apiRequest);
+              const apiResponse = await module.default.fetch(apiRequest);
               response.statusCode = apiResponse.status;
               apiResponse.headers.forEach((value, name) => response.setHeader(name, value));
               response.end(Buffer.from(await apiResponse.arrayBuffer()));
