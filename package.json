@@ -1,0 +1,56 @@
+{
+  "name": "illustration-composer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Compose isometric illustrations from a fixed vector library",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "e2e": "playwright test",
+    "ingest": "tsx scripts/ingest/run.ts",
+    "facts": "tsx scripts/facts.ts",
+    "lint:export": "tsx scripts/lint-export.ts",
+    "verify": "pnpm typecheck && pnpm lint && pnpm facts && pnpm test"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.6.0",
+    "@xmldom/xmldom": "^0.9.12",
+    "culori": "^4.0.2",
+    "fuse.js": "^7.5.0",
+    "immer": "^11.2.9",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "svg-path-bbox": "^2.1.0",
+    "svg-path-properties": "^2.2.0",
+    "zod": "^4.6.7",
+    "zustand": "^5.1.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.65.0",
+    "@resvg/resvg-js": "^2.6.2",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "eslint": "^10.14.0",
+    "eslint-plugin-boundaries": "^7.4.2",
+    "prettier": "^3.9.10",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.1",
+    "vite": "^8.3.7",
+    "vitest": "^5.1.0"
+  }
+}

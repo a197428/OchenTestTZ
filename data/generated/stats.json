@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "byFormat": {
+    "square": {
+      "templates": 6,
+      "itemsPerScene": {
+        "mean": 2.5,
+        "median": 2.5
+      },
+      "cropShare": {
+        "mean": 0.3818799565266924,
+        "median": 0.42105263157894735,
+        "p90": 0.7426470588235294
+      },
+      "density": {
+        "mean": 0.5555208333333334,
+        "median": 0.585
+      },
+      "emptyLeft": {
+        "mean": 0.011965005261064268,
+        "median": 0
+      },
+      "minDistance": {
+        "mean": 59.43426983470436,
+        "median": 46.445505305764726
+      }
+    },
+    "wide": {
+      "templates": 6,
+      "itemsPerScene": {
+        "mean": 2.5,
+        "median": 2.5
+      },
+      "cropShare": {
+        "mean": 0.40430654658148274,
+        "median": 0.42105263157894735,
+        "p90": 0.75
+      },
+      "density": {
+        "mean": 0.6431944444444445,
+        "median": 0.6654166666666668
+      },
+      "emptyLeft": {
+        "mean": 0.018615239608524514,
+        "median": 0
+      },
+      "minDistance": {
+        "mean": 54.91083948155852,
+        "median": 59.33277304730288
+      }
+    },
+    "tall": {
+      "templates": 6,
+      "itemsPerScene": {
+        "mean": 2.5,
+        "median": 2.5
+      },
+      "cropShare": {
+        "mean": 0.361204880500022,
+        "median": 0.3969465648854962,
+        "p90": 0.7279411764705883
+      },
+      "density": {
+        "mean": 0.5649956597222222,
+        "median": 0.5764973958333333
+      },
+      "emptyLeft": {
+        "mean": 0,
+        "median": 0
+      },
+      "minDistance": {
+        "mean": 68.12928358729808,
+        "median": 70.82339769418971
+      }
+    }
+  },
+  "colorPermutations": [
+    {
+      "objectId": "wallet",
+      "sceneId": "scene-2",
+      "format": "square",
+      "differences": 22,
+      "pureObjPermutation": false,
+      "pairs": [
+        [
+          "bg-light",
+          "obj-1"
+        ],
+        [
+          "obj-1",
+          "obj-2"
+        ]
+      ]
+    },
+    {
+      "objectId": "wallet",
+      "sceneId": "scene-2",
+      "format": "tall",
+      "differences": 23,
+      "pureObjPermutation": false,
+      "pairs": [
+        [
+          "bg-light",
+          "obj-1"
+        ],
+        [
+          "obj-1",
+          "obj-2"
+        ]
+      ]
+    },
+    {
+      "objectId": "wallet",
+      "sceneId": "scene-2",
+      "format": "wide",
+      "differences": 20,
+      "pureObjPermutation": false,
+      "pairs": [
+        [
+          "bg-light",
+          "obj-1"
+        ],
+        [
+          "obj-1",
+          "obj-2"
+        ]
+      ]
+    }
+  ]
+}

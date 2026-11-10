@@ -1,0 +1,11 @@
+node_modules
+dist
+pnpm-lock.yaml
+CLAUDE.md
+AGENTS.md
+.claude
+data/source
+data/generated
+playwright-report
+test-results
+examples

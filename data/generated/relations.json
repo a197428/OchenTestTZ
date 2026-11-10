@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "relations": [
+    {
+      "from": "headphones",
+      "fromState": "main",
+      "to": "tulips",
+      "toState": "bg",
+      "offsets": [
+        [
+          -303.9,
+          677.8
+        ],
+        [
+          225.3,
+          655.8
+        ],
+        [
+          419,
+          456.2
+        ]
+      ],
+      "count": 3
+    },
+    {
+      "from": "phone",
+      "fromState": "main",
+      "to": "book",
+      "toState": "main",
+      "offsets": [
+        [
+          784.1,
+          196.6
+        ],
+        [
+          890.9,
+          302
+        ]
+      ],
+      "count": 3
+    },
+    {
+      "from": "puzzle",
+      "fromState": "main",
+      "to": "book",
+      "toState": "bg",
+      "offsets": [
+        [
+          188,
+          344.4
+        ],
+        [
+          193.9,
+          326.9
+        ],
+        [
+          227.8,
+          325.2
+        ]
+      ],
+      "count": 3
+    }
+  ]
+}

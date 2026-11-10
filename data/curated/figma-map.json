@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "description": "Explicit Figma group map. Paths are arrays of group names from the sheet root.",
+  "sheets": {
+    "L": { "file": "data/source/library/library-L.svg", "root": "Размер L" },
+    "S": { "file": "data/source/library/library-S.svg", "root": "Размер S" }
+  },
+  "objects": [
+    {
+      "id": "book",
+      "nameRu": "Книга",
+      "paths": {
+        "L": { "main": ["Книга"], "bg": ["Книга_2"] },
+        "S": { "main": ["Group 2136136335", "Книга"], "bg": ["Group 2136136341", "Книга_2"] }
+      },
+      "expectedPaths": {
+        "L": { "main": 53, "bg": 53 },
+        "S": { "main": 50, "bg": 53 }
+      },
+      "ignoredPaths": {
+        "L": ["Vector_123", "Vector_124"],
+        "S": ["Vector_269", "Vector_833"]
+      },
+      "note": "Excess 17x24 px paths excluded. Confirm per-state counts during ingest."
+    },
+    {
+      "id": "phone",
+      "nameRu": "Телефон",
+      "paths": {
+        "L": { "main": ["Телефон"], "bg": ["Телефон_2"] },
+        "S": { "main": ["Телефон"], "bg": ["Телефон_2"] }
+      },
+      "expectedPaths": {
+        "L": { "main": 155, "bg": 155 },
+        "S": { "main": 96, "bg": 155 }
+      }
+    },
+    {
+      "id": "puzzle",
+      "nameRu": "Пазлы",
+      "paths": {
+        "L": { "main": ["Пазлы"], "bg": ["Пазлы_2"] },
+        "S": { "main": ["Пазлы"], "bg": ["Пазлы_2"] }
+      },
+      "expectedPaths": {
+        "L": { "main": 57, "bg": 57 },
+        "S": { "main": 57, "bg": 57 }
+      }
+    },
+    {
+      "id": "coin",
+      "nameRu": "Монета",
+      "paths": {
+        "L": { "main": ["Монета"], "bg": ["Монета_2"] },
+        "S": { "main": ["Монета"], "bg": ["Монета_2"] }
+      },
+      "expectedPaths": {
+        "L": { "main": 136, "bg": 136 },
+        "S": { "main": 130, "bg": 136 }
+      }
+    },
+    {
+      "id": "headphones",
+      "nameRu": "Наушники",
+      "paths": {
+        "L": { "main": ["Наушники"], "bg": ["Наушники_2"] },
+        "S": { "main": ["Наушники"], "bg": ["Наушники_2"] }
+      },
+      "expectedPaths": {
+        "L": { "main": 84, "bg": 84 },
+        "S": { "main": 79, "bg": 84 }
+      }
+    },
+    {
+      "id": "lamp",
+      "nameRu": "Лампа",
+      "paths": {
+        "L": { "main": ["Лампа"], "bg": ["Лампа_2"] },
+        "S": { "main": ["Лампа"], "bg": ["Лампа_2"] }
+      },
+      "expectedPaths": {
+        "L": { "main": 27, "bg": 27 },
+        "S": { "main": 27, "bg": 27 }
+      }
+    },
+    {
+      "id": "tulips",
+      "nameRu": "Тюльпаны",
+      "paths": {
+        "L": { "main": ["Group 2136136344"], "bg": ["Group 2136136347"] },
+        "S": { "main": ["Group 2136136345"], "bg": ["Group 2136136346"] }
+      },
+      "expectedPaths": {
+        "L": { "main": 131, "bg": 131 },
+        "S": { "main": 131, "bg": 131 }
+      }
+    },
+    {
+      "id": "wallet",
+      "nameRu": "Кошелек",
+      "paths": {
+        "L": { "main": ["Кошелек"], "bg": ["Кошелек_2"] },
+        "S": { "main": ["Кошелек"], "bg": ["Кошелек_2"] }
+      },
+      "expectedPaths": {
+        "L": { "main": 86, "bg": 86 },
+        "S": { "main": 83, "bg": 86 }
+      }
+    },
+    {
+      "id": "pen",
+      "nameRu": "Ручка",
+      "paths": {
+        "L": { "main": ["Ручка"], "bg": ["Ручка_2"] },
+        "S": { "main": ["Group 2136136336"], "bg": ["Group 2136136343"] }
+      },
+      "expectedPaths": {
+        "L": { "main": 24, "bg": 24 },
+        "S": { "main": 24, "bg": 24 }
+      }
+    },
+    {
+      "id": "folder",
+      "nameRu": "Папка",
+      "paths": {
+        "L": { "main": ["Папка"], "bg": ["Папка_2"] },
+        "S": { "main": ["Group 2136136337"], "bg": ["Group 2136136342"] }
+      },
+      "expectedPaths": {
+        "L": { "main": 22, "bg": 22 },
+        "S": { "main": 20, "bg": 22 }
+      }
+    }
+  ],
+  "substrates": {
+    "L": {
+      "confetti": ["Фон"],
+      "diagonal": ["Фон_3"],
+      "tealCrossCheck": ["Фон_2"]
+    },
+    "S": {}
+  }
+}

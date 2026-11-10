@@ -1,0 +1,527 @@
+{
+  "version": 1,
+  "templates": [
+    {
+      "id": "scene-1-square",
+      "sceneId": "scene-1",
+      "format": "square",
+      "scheme": "purple",
+      "substrate": "diagonal",
+      "items": [
+        {
+          "objectId": "book",
+          "state": "main",
+          "size": "L",
+          "x": -639.656,
+          "y": 11.66,
+          "z": 0
+        },
+        {
+          "objectId": "phone",
+          "state": "main",
+          "size": "L",
+          "x": 144.428,
+          "y": 208.218,
+          "z": 1
+        }
+      ]
+    },
+    {
+      "id": "scene-1-wide",
+      "sceneId": "scene-1",
+      "format": "wide",
+      "scheme": "purple",
+      "substrate": "diagonal",
+      "items": [
+        {
+          "objectId": "book",
+          "state": "main",
+          "size": "L",
+          "x": -380.616,
+          "y": -320.97,
+          "z": 0
+        },
+        {
+          "objectId": "phone",
+          "state": "main",
+          "size": "L",
+          "x": 510.323,
+          "y": -18.944,
+          "z": 1
+        }
+      ]
+    },
+    {
+      "id": "scene-1-tall",
+      "sceneId": "scene-1",
+      "format": "tall",
+      "scheme": "purple",
+      "substrate": "diagonal",
+      "items": [
+        {
+          "objectId": "book",
+          "state": "main",
+          "size": "L",
+          "x": -678.664,
+          "y": 111.66,
+          "z": 0
+        },
+        {
+          "objectId": "phone",
+          "state": "main",
+          "size": "L",
+          "x": 212.278,
+          "y": 413.688,
+          "z": 1
+        }
+      ]
+    },
+    {
+      "id": "scene-2-square",
+      "sceneId": "scene-2",
+      "format": "square",
+      "scheme": "purple",
+      "substrate": "diagonal",
+      "items": [
+        {
+          "objectId": "lamp",
+          "state": "bg",
+          "size": "L",
+          "x": -87.931,
+          "y": -605.649,
+          "z": 0
+        },
+        {
+          "objectId": "wallet",
+          "state": "main",
+          "size": "L",
+          "x": 134.838,
+          "y": 543.979,
+          "z": 1
+        },
+        {
+          "objectId": "coin",
+          "state": "main",
+          "size": "L",
+          "x": 607.481,
+          "y": 437.358,
+          "z": 2
+        }
+      ]
+    },
+    {
+      "id": "scene-2-wide",
+      "sceneId": "scene-2",
+      "format": "wide",
+      "scheme": "purple",
+      "substrate": "diagonal",
+      "items": [
+        {
+          "objectId": "lamp",
+          "state": "bg",
+          "size": "L",
+          "x": -19.369,
+          "y": -791.793,
+          "z": 0
+        },
+        {
+          "objectId": "coin",
+          "state": "main",
+          "size": "L",
+          "x": 898.911,
+          "y": 128.945,
+          "z": 1
+        },
+        {
+          "objectId": "wallet",
+          "state": "main",
+          "size": "L",
+          "x": 299.708,
+          "y": 290.789,
+          "z": 2
+        }
+      ]
+    },
+    {
+      "id": "scene-2-tall",
+      "sceneId": "scene-2",
+      "format": "tall",
+      "scheme": "purple",
+      "substrate": "diagonal",
+      "items": [
+        {
+          "objectId": "lamp",
+          "state": "bg",
+          "size": "L",
+          "x": -140.44,
+          "y": -588.449,
+          "z": 0
+        },
+        {
+          "objectId": "coin",
+          "state": "main",
+          "size": "L",
+          "x": 435.511,
+          "y": 562.553,
+          "z": 1
+        },
+        {
+          "objectId": "wallet",
+          "state": "main",
+          "size": "L",
+          "x": 35.118,
+          "y": 708.969,
+          "z": 2
+        }
+      ]
+    },
+    {
+      "id": "scene-3-square",
+      "sceneId": "scene-3",
+      "format": "square",
+      "scheme": "purple",
+      "substrate": "diagonal",
+      "items": [
+        {
+          "objectId": "pen",
+          "state": "main",
+          "size": "L",
+          "x": 93.795,
+          "y": 654.89,
+          "z": 0
+        },
+        {
+          "objectId": "book",
+          "state": "bg",
+          "size": "L",
+          "x": -120.724,
+          "y": -232.1,
+          "z": 1
+        },
+        {
+          "objectId": "puzzle",
+          "state": "main",
+          "size": "L",
+          "x": 67.324,
+          "y": 112.28,
+          "z": 2
+        }
+      ]
+    },
+    {
+      "id": "scene-3-wide",
+      "sceneId": "scene-3",
+      "format": "wide",
+      "scheme": "purple",
+      "substrate": "diagonal",
+      "items": [
+        {
+          "objectId": "pen",
+          "state": "main",
+          "size": "L",
+          "x": 36.595,
+          "y": 287.46,
+          "z": 0
+        },
+        {
+          "objectId": "book",
+          "state": "bg",
+          "size": "L",
+          "x": 204.666,
+          "y": -390.2,
+          "z": 1
+        },
+        {
+          "objectId": "puzzle",
+          "state": "main",
+          "size": "L",
+          "x": 398.594,
+          "y": -63.283,
+          "z": 2
+        }
+      ]
+    },
+    {
+      "id": "scene-3-tall",
+      "sceneId": "scene-3",
+      "format": "tall",
+      "scheme": "purple",
+      "substrate": "diagonal",
+      "items": [
+        {
+          "objectId": "pen",
+          "state": "main",
+          "size": "L",
+          "x": 21.462,
+          "y": 827.917,
+          "z": 0
+        },
+        {
+          "objectId": "book",
+          "state": "bg",
+          "size": "L",
+          "x": -251.236,
+          "y": -128.92,
+          "z": 1
+        },
+        {
+          "objectId": "puzzle",
+          "state": "main",
+          "size": "L",
+          "x": -23.436,
+          "y": 196.256,
+          "z": 2
+        }
+      ]
+    },
+    {
+      "id": "scene-4-square",
+      "sceneId": "scene-4",
+      "format": "square",
+      "scheme": "purple",
+      "substrate": "diagonal",
+      "items": [
+        {
+          "objectId": "folder",
+          "state": "main",
+          "size": "L",
+          "x": 30.616,
+          "y": 0,
+          "z": 0
+        },
+        {
+          "objectId": "wallet",
+          "state": "main",
+          "size": "L",
+          "x": -179.589,
+          "y": 517.006,
+          "z": 1
+        },
+        {
+          "objectId": "coin",
+          "state": "main",
+          "size": "L",
+          "x": 486.511,
+          "y": 724.978,
+          "z": 2
+        }
+      ]
+    },
+    {
+      "id": "scene-4-wide",
+      "sceneId": "scene-4",
+      "format": "wide",
+      "scheme": "purple",
+      "substrate": "diagonal",
+      "items": [
+        {
+          "objectId": "folder",
+          "state": "main",
+          "size": "L",
+          "x": 198.142,
+          "y": -201.749,
+          "z": 0
+        },
+        {
+          "objectId": "coin",
+          "state": "main",
+          "size": "L",
+          "x": 416.501,
+          "y": 431.578,
+          "z": 1
+        },
+        {
+          "objectId": "wallet",
+          "state": "main",
+          "size": "L",
+          "x": -213.912,
+          "y": 204.429,
+          "z": 2
+        }
+      ]
+    },
+    {
+      "id": "scene-4-tall",
+      "sceneId": "scene-4",
+      "format": "tall",
+      "scheme": "purple",
+      "substrate": "diagonal",
+      "items": [
+        {
+          "objectId": "folder",
+          "state": "main",
+          "size": "L",
+          "x": -43.744,
+          "y": -3.796,
+          "z": 0
+        },
+        {
+          "objectId": "coin",
+          "state": "main",
+          "size": "L",
+          "x": 437.131,
+          "y": 874.344,
+          "z": 1
+        },
+        {
+          "objectId": "wallet",
+          "state": "main",
+          "size": "L",
+          "x": -179.132,
+          "y": 585.02,
+          "z": 2
+        }
+      ]
+    },
+    {
+      "id": "scene-5-square",
+      "sceneId": "scene-5",
+      "format": "square",
+      "scheme": "purple",
+      "substrate": "confetti",
+      "items": [
+        {
+          "objectId": "phone",
+          "state": "main",
+          "size": "L",
+          "x": 73.118,
+          "y": 384.448,
+          "z": 0
+        },
+        {
+          "objectId": "puzzle",
+          "state": "main",
+          "size": "L",
+          "x": 331.154,
+          "y": 160.99,
+          "z": 1
+        }
+      ]
+    },
+    {
+      "id": "scene-5-wide",
+      "sceneId": "scene-5",
+      "format": "wide",
+      "scheme": "purple",
+      "substrate": "confetti",
+      "items": [
+        {
+          "objectId": "phone",
+          "state": "main",
+          "size": "L",
+          "x": 104.798,
+          "y": 152.848,
+          "z": 0
+        },
+        {
+          "objectId": "puzzle",
+          "state": "main",
+          "size": "L",
+          "x": 628.924,
+          "y": 68.6,
+          "z": 1
+        }
+      ]
+    },
+    {
+      "id": "scene-5-tall",
+      "sceneId": "scene-5",
+      "format": "tall",
+      "scheme": "purple",
+      "substrate": "confetti",
+      "items": [
+        {
+          "objectId": "phone",
+          "state": "main",
+          "size": "L",
+          "x": -55.198,
+          "y": 472.838,
+          "z": 0
+        },
+        {
+          "objectId": "puzzle",
+          "state": "main",
+          "size": "L",
+          "x": 197.174,
+          "y": 183.09,
+          "z": 1
+        }
+      ]
+    },
+    {
+      "id": "scene-6-square",
+      "sceneId": "scene-6",
+      "format": "square",
+      "scheme": "purple",
+      "substrate": "confetti",
+      "items": [
+        {
+          "objectId": "tulips",
+          "state": "bg",
+          "size": "L",
+          "x": -32.865,
+          "y": -373.547,
+          "z": 0
+        },
+        {
+          "objectId": "headphones",
+          "state": "main",
+          "size": "L",
+          "x": 192.407,
+          "y": 282.302,
+          "z": 1
+        }
+      ]
+    },
+    {
+      "id": "scene-6-wide",
+      "sceneId": "scene-6",
+      "format": "wide",
+      "scheme": "purple",
+      "substrate": "confetti",
+      "items": [
+        {
+          "objectId": "tulips",
+          "state": "bg",
+          "size": "L",
+          "x": -97.831,
+          "y": -378.893,
+          "z": 0
+        },
+        {
+          "objectId": "headphones",
+          "state": "main",
+          "size": "L",
+          "x": 321.197,
+          "y": 77.325,
+          "z": 1
+        }
+      ]
+    },
+    {
+      "id": "scene-6-tall",
+      "sceneId": "scene-6",
+      "format": "tall",
+      "scheme": "purple",
+      "substrate": "confetti",
+      "items": [
+        {
+          "objectId": "tulips",
+          "state": "bg",
+          "size": "L",
+          "x": 303.885,
+          "y": -190.457,
+          "z": 0
+        },
+        {
+          "objectId": "headphones",
+          "state": "main",
+          "size": "L",
+          "x": 0,
+          "y": 487.339,
+          "z": 1
+        }
+      ]
+    }
+  ]
+}

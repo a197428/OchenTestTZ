@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "sourceScheme": "purple",
+  "note": "Library artwork is drawn in the purple scheme. The literal 'white' fill is normalized to #FFFFFF.",
+  "schemes": [
+    {
+      "id": "purple",
+      "nameRu": "Фиолетовая",
+      "slots": {
+        "bg-light": "#D7CDF5",
+        "bg-mid": "#AA9BF0",
+        "bg-dark": "#7864D7",
+        "obj-1": "#F9ECB0",
+        "obj-2": "#F9A3AA",
+        "obj-3": "#FFE3E1",
+        "ink": "#181817",
+        "white": "#FFFFFF"
+      }
+    },
+    {
+      "id": "orange",
+      "nameRu": "Оранжевая",
+      "slots": {
+        "bg-light": "#FDD7B9",
+        "bg-mid": "#FAC896",
+        "bg-dark": "#D27532",
+        "obj-1": "#F9ECB0",
+        "obj-2": "#80DADA",
+        "obj-3": "#BEEBEB",
+        "ink": "#181817",
+        "white": "#FFFFFF"
+      }
+    },
+    {
+      "id": "teal",
+      "nameRu": "Бирюзовая",
+      "slots": {
+        "bg-light": "#BEEBEB",
+        "bg-mid": "#80DADA",
+        "bg-dark": "#5ABEBE",
+        "obj-1": "#FFD4F2",
+        "obj-2": "#6D7BFC",
+        "obj-3": "#B6C6FE",
+        "ink": "#181817",
+        "white": "#FFFFFF"
+      }
+    }
+  ]
+}
